@@ -1,17 +1,19 @@
-import express from "express";
 import jwt from "jsonwebtoken";
+import User from "../models/User";
 
-export const auth = async (req, res) => {
+export const verifyToken = async (req, res, next) => {
+  let token;
   try {
-    const token = req.header("Authorization");
+    token = req.headers.authorization?.split(" ")[1];
     if (!token) {
-      return res.status(403).send("Access denied");
-    }
-    if (token.startsWith("Bearer")) {
-      token = req.headers.authorization.split(" ")[1];
+      return res.status(403).send("Access Denied");
     }
     const verified = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = verified;
+    const user = await User.findById(verified.id).select("-password");
+    if (!user) {
+      return res.status(403).send("Access Denied");
+    }
+    req.user = user;
     next();
   } catch (err) {
     res.status(500).json({ error: err.message });
