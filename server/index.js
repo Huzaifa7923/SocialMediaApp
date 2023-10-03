@@ -13,6 +13,7 @@ const __filename = fileURLToPath(import.meta.url); //url of current module
 const __dirname = path.dirname(__filename);
 
 import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/users.js";
 
 const app = express();
 dotenv.config();
@@ -46,6 +47,7 @@ app.post("/auth/register", upload.single("picture"), register);
 //above routes is mentioned directly bcz of 'upload'
 /*ROUTES*/
 app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
 
 /*MONGOOSE SETUP*/
 const PORT = process.env.PORT || 6001;
