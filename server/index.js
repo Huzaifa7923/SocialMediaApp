@@ -10,6 +10,9 @@ import { fileURLToPath } from "url";
 
 import { register } from "./controllers/auth.js";
 import { createPost } from "./controllers/posts.js";
+import { users, posts } from "./data/index.js";
+import User from "./models/User.js";
+import Post from "./models/Post.js";
 
 /*configurations bcz in package.json type:"module" => so we can use import */
 const __filename = fileURLToPath(import.meta.url); //url of current module
@@ -65,5 +68,8 @@ mongoose
   })
   .then(() => {
     app.listen(PORT, () => console.log(`Server Port : ${PORT}`));
+    //Adding mock data one time
+    User.insertMany(users);
+    Post.insertMany(posts);
   })
   .catch((error) => console.log(`${error} did not connect `));
